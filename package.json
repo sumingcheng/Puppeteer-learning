@@ -1,0 +1,23 @@
+{
+  "name": "Puppeteer-learning",
+  "version": "1.0.0",
+  "description": "Puppeteer-learning",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sumingcheng/Puppeteer-learning.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sumingcheng/Puppeteer-learning/issues"
+  },
+  "homepage": "https://github.com/sumingcheng/Puppeteer-learning#readme",
+  "dependencies": {
+    "puppeteer": "^19.9.0"
+  }
+}
