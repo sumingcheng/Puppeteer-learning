@@ -1,29 +1,43 @@
-const puppeteer = require('puppeteer');
-const fs = require('fs');
+const puppeteer = require('puppeteer')
+const path = require('path')
+const fs = require('fs')
 
-(async () => {
+async function run() {
   const browser = await puppeteer.launch()
   const page = await browser.newPage()
   
-  // 跳转到 bing.com
   await page.goto('https://www.bing.com/?mkt=zh-CN')
   
-  // 在搜索框输入 "深拷贝"，然后回车
   await page.type('input[name="q"]', '深拷贝')
   await page.keyboard.press('Enter')
   
-  // 等待搜索结果加载
+  await page.waitForNavigation()
   await page.waitForSelector('#b_results')
   
-  // 获取前十个搜索结果并截屏
   const searchResults = await page.$$eval('#b_results > li.b_algo > h2 > a', anchors => {
     return anchors.slice(0, 10).map(anchor => anchor.href)
   })
   
+  const dir = path.join(__dirname, '..', 'screenshot') //将 screenshot 目录放在同级目录下
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir)
+  }
+  
   for (let i = 0; i < searchResults.length; i ++) {
-    await page.goto(searchResults[i])
-    await page.screenshot({ path: __dirname + `./screenshot/search-result-${i + 1}.png` })
+    try {
+      await page.goto(searchResults[i])
+      await page.waitForTimeout(3000) // 等待一段时间，确保页面加载完全
+      const fileName = `search-result-${i + 1}.png`
+      const filePath = path.join(dir, fileName)
+      console.log(filePath)
+      await page.screenshot({ path: filePath })
+      console.log(`Screenshot saved: ${filePath}`)
+    } catch (error) {
+      console.error(`Error taking screenshot #${i + 1}: ${error.message}`)
+    }
   }
   
   await browser.close()
-})()
+}
+
+run()
