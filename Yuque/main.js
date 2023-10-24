@@ -26,6 +26,8 @@ const {ensureOutputDirectory, saveToFile} = require('./fileOperations');
       const fullUrl = 'https://www.yuque.com' + item.href + '/markdown?plain=true&linebreak=false&anchor=false';
       await page.goto(fullUrl);
 
+      await page.waitForSelector('body > pre');  // 等待这个元素加载完成
+
       const content = await page.evaluate(() => {
         const contentElement = document.querySelector('body > pre');
         return contentElement ? contentElement.innerText : '';
@@ -36,5 +38,6 @@ const {ensureOutputDirectory, saveToFile} = require('./fileOperations');
     }
   }
 
+  console.log('该知识库的所有文章已经保存到output目录下')
   await browser.close();
 })();

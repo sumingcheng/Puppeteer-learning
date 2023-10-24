@@ -36,7 +36,18 @@ async function captureItems(page, scrollSelector, itemSelector) {
     });
   }, scrollSelector, itemSelector);
 
-  return res;
+  const uniqueItems = [];
+  const urlSet = new Set();  // 使用Set来存储已经看到的URL
+
+  // 遍历res数组，只保留那些之前没有见过的项
+  for (const item of res) {
+    if (item && !urlSet.has(item.href)) {
+      uniqueItems.push(item);
+      urlSet.add(item.href);  // 将新的URL添加到Set中
+    }
+  }
+
+  return uniqueItems;  // 返回去重后的项
 }
 
 
